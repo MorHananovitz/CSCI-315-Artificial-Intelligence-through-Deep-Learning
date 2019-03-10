@@ -49,7 +49,7 @@ def reg_learn(x1, x2, y, z, n):
     z_test=z[n:]
 
     A_train = np.vstack([x1_train, x2_train, np.ones(len(x1_train))]).T
-    w1, w2, b = np.linalg.lstsq(A_train, y_train)[0]
+    w1, w2, b = np.linalg.lstsq(A_train, y_train, rcond=None)[0]
     regpar = np.array([w1, w2, b])
 
     A_test = np.vstack([x1_test, x2_test, np.ones(len(x1_test))]).T
