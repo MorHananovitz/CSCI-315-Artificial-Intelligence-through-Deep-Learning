@@ -11,7 +11,7 @@ class Perceptron:
         return str( "This is a Perceptron with %d inputs and %d outputs" % (self.input, self.output))
 
     def test(self, J):
-        print(np.dot(np.transpose(np.append(J, [1])), self.weight) == 0)
+        return(np.dot(np.transpose(np.append(J, [1])), self.weight) > 0)
 
     def train(self,I,T, t=1000):
         dW = np.zeros((self.input+1,self.output))
@@ -22,4 +22,4 @@ class Perceptron:
                 D = row_T - O
                 dW = dW + np.outer(row_I, D)
             self.weight = self.weight + dW / len(Itrain)
-            print(self.weight)
+        print("Complete %d Iterations" % t)
