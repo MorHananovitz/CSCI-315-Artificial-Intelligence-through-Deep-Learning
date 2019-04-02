@@ -16,6 +16,8 @@ class Perceptron:
     def train(self,I,T, t=1000):
         Itrain = np.hstack((I, np.split(np.ones(len(I)), len(I))))
         for i in range(t):
+            if i %100 == 0:
+                print("Complete %d / %d Iterations" % (i, t))
             dW = np.zeros((self.input + 1, self.output))
             for row_I, row_T in zip(Itrain, T):
                 O = np.dot(row_I, self.weight) > 0

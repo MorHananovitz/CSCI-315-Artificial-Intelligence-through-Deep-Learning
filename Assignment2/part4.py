@@ -21,7 +21,7 @@ targets[:250,0] = 1
 targets[250:,1] = 1
 
 per = Perceptron(196, 2)
-per.train(input_vec_train, targets, t =100)
+per.train(input_vec_train, targets, t =1000)
 
 zero_counter = []
 for i in range(0, 250):
