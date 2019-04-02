@@ -24,4 +24,6 @@ class Perceptron:
                 D = row_T - O
                 dW = dW + np.outer(row_I, D)
             self.weight = self.weight + dW / len(Itrain)
+        print()
         print("Complete %d Iterations" % t)
+

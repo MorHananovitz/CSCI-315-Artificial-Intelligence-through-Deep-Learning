@@ -19,7 +19,7 @@ targets[2000:2250, 8] = 1
 targets[2250:, 9] = 1
 
 per = Perceptron(196, 10)
-per.train(input_train, targets, t =1000)
+per.train(input_train, targets)
 
 confusion_matrix = []
 
@@ -30,4 +30,5 @@ for i in range(10):
         success += per.test(input_test[j])
     confusion_matrix.append(success)
 
+print()
 print(np.array(confusion_matrix))

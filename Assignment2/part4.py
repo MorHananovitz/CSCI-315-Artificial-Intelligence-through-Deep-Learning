@@ -21,7 +21,7 @@ targets[:250,0] = 1
 targets[250:,1] = 1
 
 per = Perceptron(196, 2)
-per.train(input_vec_train, targets, t =1000)
+per.train(input_vec_train, targets)
 
 zero_counter = []
 for i in range(0, 250):
@@ -34,5 +34,6 @@ for i in range(250, 500):
     eight_counter.append(per.test(input_vec_test[i]))
 eight_success = np.sum(eight_counter, axis=0)[1] / 250 * 100
 
+print()
 print('0 Classified correct is: %d %%' % zero_success)
 print('8 Classified correct is: %d %%' % eight_success)
