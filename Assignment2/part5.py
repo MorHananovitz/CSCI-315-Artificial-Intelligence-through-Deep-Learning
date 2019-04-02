@@ -2,6 +2,7 @@ import numpy as np
 import itertools as it
 from perceptron import Perceptron
 from digit import dataread
+import pandas as pd
 
 input_train, _ = dataread('digits_train.txt')
 input_test, _ = dataread('digits_test.txt')
@@ -31,4 +32,8 @@ for i in range(10):
     confusion_matrix.append(success)
 
 print()
-print(np.array(confusion_matrix))
+A = np.array(confusion_matrix)
+title = [_ for _ in '0123456789']
+B = pd.DataFrame(A, index= title, columns= title)
+B.to_csv('B.csv', index=True, header=True, sep=' ')
+print(B)
