@@ -1,7 +1,7 @@
 import numpy as np
 import itertools as it
 import pandas as pd
-from backprop import Backprop
+from backpropfast import Backprop
 import re
 
 def Vector2num(target):
@@ -33,8 +33,8 @@ input_test, _ = dataread('digits_test.txt')
 targets = np.zeros((2500,1))
 targets[500:750] = 1
 
-NN = Backprop(196, 1, 10)
-eta, t, h = NN.train(input_train, targets, eta=0.8, t=10000)
+NN = Backprop(n = 196, m = 1, h = 20, part = 2)
+eta, t, h, mew, RMSerr = NN.train(np.array(input_train), np.array(targets), eta=0.1, t=10000, n_batch = 1000)
 
 falneg_counter = []
 for i in range(500, 750):
@@ -46,8 +46,10 @@ for i in it.chain(range(0,500), range(750,2500)):
     falpos_counter.append(NN.test(input_test[i], targets[i]))
 false_pos_rate = np.sum(falpos_counter)/2250*100
 
-name_file_WHO = "WHO_eta=%.1f_t=%d_h=%d.wgt" % (eta, t, h)
-name_file_WIH = "WIH_eta=%.1f_t=%d_h=%d.wgt" % (eta, t, h)
+print("2-Not 2 Results with eta=%.1f %d Iterations and %d Hidden Units" % (eta, t, h))
+
+name_file_WHO = "Part_%d_WHO_eta=%.1f_t=%d_h=%d.wgt" % (2, eta, t , h)
+name_file_WIH = "Part_%d_WIH_eta=%.1f_t=%d_h=%d.wgt" % (2, eta, t , h)
 
 see_WHO = NN.load_mine(name_file_WHO)
 see_WIH = NN.load_mine(name_file_WIH)
