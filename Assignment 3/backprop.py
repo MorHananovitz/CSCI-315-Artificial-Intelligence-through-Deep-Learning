@@ -25,13 +25,14 @@ class Backprop:
         O = sigmoid(Onet)
         return(np.abs(O-T))
 
-    def save(self):
-        pickle.dump(self.WIH, open("WIH_prev.p", "w"))
-
-    def load(self):
-        pickle.load(open("WIH_prev.p", "r"))
+    def load_mine(self, name_file):
+        return pickle.load(open(name_file, "rb"))
 
     def train(self,I, T, eta=0.5, t=1000):
+        def save(Weights,name):
+            pickle.dump(Weights, open(name, "wb"))
+
+
         def sigmoid(x, derivative=False):
             sigm = 1 / (1 + np.exp(-x))
             if derivative:
@@ -57,6 +58,10 @@ class Backprop:
 
             self.WIH = self.WIH + eta*dWIH / len(I)
             self.WHO = self.WHO + eta*dWHO/ len(I)
+        save(self.WHO,"WHO_eta=%.1f_t=%d_h=%d.wgt" %(eta,t,self.hiddenunits))
+        save(self.WIH,"WIH_eta=%.1f_t=%d_h=%d.wgt" %(eta,t,self.hiddenunits))
 
         print()
         print("Complete %d Iterations" % t)
+        print()
+        return eta, t,self.hiddenunits
