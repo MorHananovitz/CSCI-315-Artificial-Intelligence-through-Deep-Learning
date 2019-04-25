@@ -49,7 +49,7 @@ targets[2000:2250, 8] = 1
 targets[2250:, 9] = 1
 
 NN = Backprop(n = 196, m = 10, h = 20, part = 3)
-eta, t, h, mew, RMSerr  = NN.train(np.array(input_train), np.array(targets), eta=0.5, t=5000, n_batch = 500)
+eta, t, h, mew, RMSerr, WIH_00, WHO_00  = NN.train(np.array(input_train), np.array(targets), eta=0.5, t=5000, n_batch = 500)
 
 confusion_matrix = []
 

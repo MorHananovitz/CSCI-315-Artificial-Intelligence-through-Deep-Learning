@@ -2,6 +2,8 @@ import numpy as np
 import itertools as it
 import pandas as pd
 from backpropfast import Backprop
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 import re
 
 def Vector2num(target):
@@ -34,26 +36,14 @@ targets = np.zeros((2500,1))
 targets[500:750] = 1
 
 NN = Backprop(n = 196, m = 1, h = 20, part = 2)
-eta, t, h, mew, RMSerr, WIH_00, WHO_00 = NN.train(np.array(input_train), np.array(targets), eta=0.1, t=10000, n_batch = 1000)
+eta, t, h, mew, RMSerr, WIH_00, WHO_00 = NN.train(np.array(input_train), np.array(targets), eta=0.05, t=1000, n_batch = 1000)
 
-falneg_counter = []
-for i in range(500, 750):
-    falneg_counter.append(NN.test(input_test[i], targets[i]))
-false_neg_rate = (250-np.sum(falneg_counter))/250*100
-
-falpos_counter = []
-for i in it.chain(range(0,500), range(750,2500)):
-    falpos_counter.append(NN.test(input_test[i], targets[i]))
-false_pos_rate = np.sum(falpos_counter)/2250*100
-
-print("2-Not 2 Results with eta=%.1f %d Iterations and %d Hidden Units" % (eta, t, h))
-
-name_file_WHO = "Part_%d_WHO_eta=%.1f_t=%d_h=%d.wgt" % (2, eta, t , h)
-name_file_WIH = "Part_%d_WIH_eta=%.1f_t=%d_h=%d.wgt" % (2, eta, t , h)
-
-see_WHO = NN.load_mine(name_file_WHO)
-see_WIH = NN.load_mine(name_file_WIH)
-
-print()
-print('False Positive Rate is %d %%' % false_pos_rate)
-print('False Negative Rate is %d %%' % false_neg_rate)
+fig = plt.figure()
+ax = fig.add_subplot(1, 1, 1)
+x = np.arange(0, t, 100)
+y = np.array(RMSerr)
+ax.plot(x, y)
+ax.set_xlabel('Iterations')
+ax.set_ylabel('RMS error')
+plt.title("Part 4b Plot")
+plt.show()
