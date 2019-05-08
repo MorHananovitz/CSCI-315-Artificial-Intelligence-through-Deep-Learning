@@ -44,7 +44,7 @@ The 1000 epoches session resulted in 6% increase in the learning success!
 No, both of them resulted in 92% success.
 - *Did decreasing the number of hidden layers reduce the success of the multilayer perceptron?*
 
-Yes! when I used 2 layers the test accuracy was around 92%, 1 layer reduced the accuracy to 78% - **14% less** for the same amount of epochs.
+Yes! When I used 2 layers the test accuracy was around 92%, 1 layer reduced the accuracy to 78% - **14% less** for the same amount of epochs.
 - *What general lesson might you deduce from your answers to these three questions?*
 
-We have mulpiple options in increasing the success of our model, we can increase iterations (should always plot the error trend to deretmine when we hit the critical point where the error does not reduce anymore - so no point of wasting more time on iterations), we can add layers or we can even try a different approaches! (moving from regression to perceptron learning).
+We have multiple options in increasing the success of our model, we can increase iterations (should always plot the error trend to determine when we hit the critical point where the error does not reduce anymore - so no point of wasting more time on iterations), we can add layers or we can even try a different approaches! (Moving from regression to perceptron learning).
