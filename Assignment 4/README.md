@@ -1,8 +1,8 @@
 # Assignment 4
 
 ### Part 3 Images
-<img src="Graph" align="center" width=700>
-<img src="Scalars" align="center" width=700>
+<img src="Graph.png" align="center" width=700>
+<img src="Scalars.png" align="center" width=700>
 
 
 ### Part 5: Brief Write Up
