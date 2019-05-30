@@ -13,9 +13,9 @@
   ```sh
 Epoch: 0008 cost: 0.023067260
 Validation Error: 0.008199989795684814
-Test Accuracy: **0.9913**
+Test Accuracy: 0.9913
 ```
-###Confusion Matrix:
+### Confusion Matrix:
   ```sh
        0     1     2     3    4    5    6     7    8    9
 0  977     0     0     0    0    0    2     1    0    0
