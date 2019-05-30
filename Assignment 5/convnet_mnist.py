@@ -1,8 +1,10 @@
 import input_data
-mnist = input_data.read_data_sets("data/", one_hot=True)
-
+import numpy as np
+import pandas as pd
 import tensorflow as tf
 import time
+
+mnist = input_data.read_data_sets("data/", one_hot=True)
 
 # Architecture
 n_hidden_1 = 256
@@ -10,13 +12,13 @@ n_hidden_2 = 256
 
 # Parameters
 learning_rate = 0.0001
-training_epochs = 2
+training_epochs = 8
 batch_size = 100
 display_step = 1
 
 def conv2d(input, weight_shape, bias_shape):
     incoming = weight_shape[0] * weight_shape[1] * weight_shape[2]
-    weight_init = tf.random_normal_initializer(stddev=(2.0/incoming)**0.5)
+    weight_init = tf.random_normal_initializer(stddev=(2.0 / incoming) ** 0.5)
     W = tf.get_variable("W", weight_shape, initializer=weight_init)
     bias_init = tf.constant_initializer(value=0)
     b = tf.get_variable("b", bias_shape, initializer=bias_init)
@@ -26,7 +28,7 @@ def max_pool(input, k=2):
     return tf.nn.max_pool(input, ksize=[1, k, k, 1], strides=[1, k, k, 1], padding='SAME')
 
 def layer(input, weight_shape, bias_shape):
-    weight_init = tf.random_normal_initializer(stddev=(2.0/weight_shape[0])**0.5)
+    weight_init = tf.random_normal_initializer(stddev=(2.0 / weight_shape[0]) ** 0.5)
     bias_init = tf.constant_initializer(value=0)
     W = tf.get_variable("W", weight_shape,
                         initializer=weight_init)
@@ -34,9 +36,7 @@ def layer(input, weight_shape, bias_shape):
                         initializer=bias_init)
     return tf.nn.relu(tf.matmul(input, W) + b)
 
-
 def inference(x, rate):
-
     x = tf.reshape(x, shape=[-1, 28, 28, 1])
     with tf.variable_scope("conv_1"):
         conv_1 = conv2d(x, [5, 5, 1, 32], [32])
@@ -48,8 +48,8 @@ def inference(x, rate):
 
     with tf.variable_scope("fc"):
         pool_2_flat = tf.reshape(pool_2, [-1, 7 * 7 * 64])
-        fc_1 = layer(pool_2_flat, [7*7*64, 1024], [1024])
-        
+        fc_1 = layer(pool_2_flat, [7 * 7 * 64, 1024], [1024])
+
         # apply dropout
         fc_1_drop = tf.nn.dropout(fc_1, rate)
 
@@ -58,9 +58,8 @@ def inference(x, rate):
 
     return output
 
-
 def loss(output, y):
-    xentropy = tf.nn.softmax_cross_entropy_with_logits_v2(output, y)
+    xentropy = tf.nn.softmax_cross_entropy_with_logits_v2(y, output)
     loss = tf.reduce_mean(xentropy)
     return loss
 
@@ -70,12 +69,14 @@ def training(cost, global_step):
     train_op = optimizer.minimize(cost, global_step=global_step)
     return train_op
 
-
 def evaluate(output, y):
     correct_prediction = tf.equal(tf.argmax(output, 1), tf.argmax(y, 1))
     accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
     tf.summary.scalar("validation error", (1.0 - accuracy))
     return accuracy
+
+def confusion(output, y):
+    return tf.confusion_matrix(labels=tf.argmax(y, 1), predictions=tf.argmax(output, 1), num_classes=10)
 
 if __name__ == '__main__':
 
@@ -85,10 +86,9 @@ if __name__ == '__main__':
 
             with tf.variable_scope("mnist_conv_model"):
 
-                x = tf.placeholder("float", [None, 784]) # mnist data image of shape 28*28=784
-                y = tf.placeholder("float", [None, 10]) # 0-9 digits recognition => 10 classes
-                keep_prob = tf.placeholder(tf.float32) # dropout probability
-                rate =  1 - keep_prob
+                x = tf.placeholder("float", [None, 784])  # mnist data image of shape 28*28=784
+                y = tf.placeholder("float", [None, 10])  # 0-9 digits recognition => 10 classes
+                rate = tf.placeholder(tf.float32)  # dropout probability
 
                 output = inference(x, rate)
 
@@ -100,6 +100,8 @@ if __name__ == '__main__':
 
                 eval_op = evaluate(output, y)
 
+                cm = confusion(output, y)
+
                 summary_op = tf.summary.merge_all()
 
                 saver = tf.train.Saver()
@@ -107,30 +109,27 @@ if __name__ == '__main__':
                 sess = tf.Session()
 
                 summary_writer = tf.summary.FileWriter("conv_mnist_logs/",
-                                                    graph_def=sess.graph_def)
-                
+                                                       graph_def=sess.graph_def)
                 init_op = tf.initialize_all_variables()
-
                 sess.run(init_op)
-
-
                 # Training cycle
                 for epoch in range(training_epochs):
 
                     avg_cost = 0.
-                    total_batch = int(mnist.train.num_examples/batch_size)
+                    total_batch = int(mnist.train.num_examples / batch_size)
                     # Loop over all batches
                     for i in range(total_batch):
                         minibatch_x, minibatch_y = mnist.train.next_batch(batch_size)
                         # Fit training using batch data
                         sess.run(train_op, feed_dict={x: minibatch_x, y: minibatch_y, rate: 0.5})
                         # Compute average loss
-                        avg_cost += sess.run(cost, feed_dict={x: minibatch_x, y: minibatch_y, rate: 0.5})/total_batch
+                        avg_cost += sess.run(cost, feed_dict={x: minibatch_x, y: minibatch_y, rate: 0.5}) / total_batch
                     # Display logs per epoch step
                     if epoch % display_step == 0:
-                        print("Epoch:", '%04d' % (epoch+1), "cost =", "{:.9f}".format(avg_cost))
+                        print("Epoch:", '%04d' % (epoch + 1), "cost =", "{:.9f}".format(avg_cost))
 
-                        accuracy = sess.run(eval_op, feed_dict={x: mnist.validation.images, y: mnist.validation.labels, rate: 1})
+                        accuracy = sess.run(eval_op,
+                                            feed_dict={x: mnist.validation.images, y: mnist.validation.labels, rate: 1})
 
                         print("Validation Error:", (1 - accuracy))
 
@@ -139,10 +138,16 @@ if __name__ == '__main__':
 
                         saver.save(sess, "conv_mnist_logs/model-checkpoint", global_step=global_step)
 
-
                 print("Optimization Finished!")
 
-
-                accuracy = sess.run(eval_op, feed_dict={x: mnist.test.images, y: mnist.test.labels, rate: 1})
-
+                accuracy,con = sess.run([eval_op,cm] ,feed_dict={x: mnist.test.images, y: mnist.test.labels, rate: 1})
                 print("Test Accuracy:", accuracy)
+                print()
+
+                #Confusion Matrix Display
+                print("Confusion Matrix:")
+                A = np.array(con)
+                title = [_ for _ in '0123456789']
+                B = pd.DataFrame(A, index=title, columns=title)
+                B.to_csv('B.csv', index=True, header=True, sep=' ')
+                print(B)
