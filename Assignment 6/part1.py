@@ -40,12 +40,12 @@ print("This is Backprop")
 bp = Backprop(1, 1, 2) #1 input, 1 outputs, 2 hidden layers
 inputs = xorseq(1000)
 targets = shift(inputs)
-eta, t, hiddenunits, RMSerr=bp.train(inputs, targets, eta=0.5, t=600)
+eta, t, hiddenunits, RMSerr=bp.train(inputs, targets, eta=0.5, t=100)
 
 print()
 print("This is SRN")
 srn = SRN(1, 1, 2) #1 input, 1 outputs, 2 hidden layers
-srn.train(inputs, targets, eta=0.5, t=600)
+srn.train(inputs, targets, eta=0.5, t=100)
 
 xorerr_bp, xorerr_srn = xorerr(targets, inputs)
 
