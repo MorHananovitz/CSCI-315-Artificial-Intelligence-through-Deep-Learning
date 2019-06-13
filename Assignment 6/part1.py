@@ -1,6 +1,9 @@
 import numpy as np
 from backprop import Backprop
 from srn import SRN
+import math
+
+
 
 def xorseq(n):
     inputs = []
@@ -18,12 +21,34 @@ def shift(inputs):
     shiftleft.append([0])
     return shiftleft
 
-#Backprop
+def xorerr(targets, inputs):
+    Obp = bp.test(inputs)
+    xorerr_bp = 0.0
+    xorerr_srn = 0.0
+
+    for count in range(len(targets)):
+        if count % 3 == 1:
+            xorerr_bp += (Obp[count]-targets[count]) ** 2
+            xorerr_srn +=(srn.test(inputs[count])- targets[count]) ** 2
+
+    #print(xorerr_bp*0.001)
+    #print(xorerr_srn*0.001)
+
+    return xorerr_bp*0.001, xorerr_srn*0.001
+
+print("This is Backprop")
 bp = Backprop(1, 1, 2) #1 input, 1 outputs, 2 hidden layers
 inputs = xorseq(1000)
 targets = shift(inputs)
-bp.train(inputs, targets, eta=0.5, t=600)
+eta, t, hiddenunits, RMSerr=bp.train(inputs, targets, eta=0.5, t=600)
 
-#SRN
+print()
+print("This is SRN")
 srn = SRN(1, 1, 2) #1 input, 1 outputs, 2 hidden layers
 srn.train(inputs, targets, eta=0.5, t=600)
+
+xorerr_bp, xorerr_srn = xorerr(targets, inputs)
+
+print("XOR Error:")
+print("Backprop %f " % xorerr_bp)
+print("SRN %f " % xorerr_srn)
