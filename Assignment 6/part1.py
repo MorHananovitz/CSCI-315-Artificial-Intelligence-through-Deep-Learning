@@ -3,8 +3,6 @@ from backprop import Backprop
 from srn import SRN
 import math
 
-
-
 def xorseq(n):
     inputs = []
     for i in range(n):
@@ -30,9 +28,6 @@ def xorerr(targets, inputs):
         if count % 3 == 1:
             xorerr_bp += (Obp[count]-targets[count]) ** 2
             xorerr_srn +=(srn.test(inputs[count])- targets[count]) ** 2
-
-    #print(xorerr_bp*0.001)
-    #print(xorerr_srn*0.001)
 
     return xorerr_bp*0.001, xorerr_srn*0.001
 

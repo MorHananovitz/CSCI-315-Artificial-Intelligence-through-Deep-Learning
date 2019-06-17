@@ -36,7 +36,9 @@ class SRN:
                 return sigm * (1 - sigm)
             return sigm
 
-        RMSerr = []
+        RMSerr = np.zeros(t)
+        p = len(I)
+
         for i in range(t):
 
             if i % 10 == 0:
@@ -45,14 +47,16 @@ class SRN:
             dWHO = np.zeros((self.hiddenunits + 1, self.output))
 
             aH = np.zeros(2)
-            for row_I, row_T in zip(I, T):
-                contex_layer = np.append(aH, np.append(row_I, 1))
+            error = 0
+
+            for j in range(len(I)):
+                contex_layer = np.append(aH, np.append(I[j], 1))
                 Hnet = np.dot(contex_layer, self.WIH)
                 H = sigmoid(Hnet)  # Sigmoid Function
                 aH= H
                 Onet = np.dot(np.append(H, 1), self.WHO)
                 O = sigmoid(Onet)
-                delO = np.multiply((row_T - O), sigmoid(O, True))
+                delO = np.multiply((T[j] - O), sigmoid(O, True))
                 err = np.dot(delO, self.WHO.T)[:-1]
                 delH = np.multiply(err, sigmoid(Hnet, True))  # Backprop
                 dWIH = dWIH + np.dot(contex_layer.reshape(-1, 1), delH.reshape(-1, 1).T)
@@ -60,11 +64,12 @@ class SRN:
 
                 self.WIH = self.WIH + eta * dWIH
                 self.WHO = self.WHO + eta * dWHO
+                error += np.power((T[i] - O), 2)
 
-            if i%10==0:
-                RMSerr.append(np.sum((T - O) ** 2) / 3000)
-                print(np.sum((T - O) ** 2) / 3000)
+            RMSerr[i] = np.sqrt(np.sum(error)/p)
 
+            if (i+1)%10==0  and (i+1 < t) :
+                print(RMSerr[i])
 
         print()
         print("Complete %d Iterations for SRN" % t)
