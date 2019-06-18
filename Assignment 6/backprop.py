@@ -36,15 +36,15 @@ class Backprop:
         I = np.arange(len(I)).reshape(len(I),1)
         p = len(I)
 
+
         for i in range(t):
-            if i % 10 == 0:
-                print("Complete %d / %d Iterations" % (i, t))
-            dWIH = np.zeros((self.input + 1, self.hiddenunits))
-            dWHO = np.zeros((self.hiddenunits + 1, self.output))
 
             error = 0
 
             for j in range(len(I)):
+                dWIH = np.zeros((self.input + 1, self.hiddenunits))
+                dWHO = np.zeros((self.hiddenunits + 1, self.output))
+
                 Hnet = np.dot(np.append(I[j], 1), self.WIH)
                 H = sigmoid(Hnet)  # Sigmoid Function
                 Onet = np.dot(np.append(H, 1), self.WHO)
@@ -57,16 +57,12 @@ class Backprop:
 
                 self.WIH = self.WIH + eta * dWIH
                 self.WHO = self.WHO + eta * dWHO
-                error += np.power((T[i] - O), 2)
+                error += np.power((T[j] - O), 2)
 
             RMSerr[i] = np.sqrt(np.sum(error)/p)
 
-            if (i + 1) % 10 == 0 and (i + 1 < t):
-                print(RMSerr[i])
-
-            #if i%10==0:
-             #   RMSerr.append(np.sum((T - O) ** 2) / (len(I)))
-              #  print(np.sum((T - O) ** 2) / (len(I)))
+            if (i)%10==0:
+                print("%d / %d: %.6f" % (i, t, RMSerr[i]))
 
         print()
         print("Complete %d Iterations for Backprop" % t)

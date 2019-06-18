@@ -19,17 +19,19 @@ class SRN:
                 return sigm * (1 - sigm)
             return sigm
 
-        aH = np.zeros(2)
+        O = []
+        aH = np.zeros(self.hiddenunits)
         for row_I in I:
             contex_layer = np.append(aH, np.append(row_I, 1))
             Hnet = np.dot(contex_layer, self.WIH)
             H = sigmoid(Hnet)  # Sigmoid Function
             aH = H
             Onet = np.dot(np.append(H, 1), self.WHO)
-            O = sigmoid(Onet)
+            O_help = sigmoid(Onet)
+            O.append(O_help)
         return O
 
-    def train(self,I, T, eta=0.5, mew = 0, t=10000):
+    def train(self,I, T, eta=0.5, t=10000):
         def sigmoid(x, derivative=False):
             sigm = 1 / (1 + np.exp(-x))
             if derivative:
@@ -41,15 +43,13 @@ class SRN:
 
         for i in range(t):
 
-            if i % 10 == 0:
-                print("Complete %d / %d Iterations" % (i, t))
-            dWIH = np.zeros((self.input + self.hiddenunits + 1, self.hiddenunits))
-            dWHO = np.zeros((self.hiddenunits + 1, self.output))
-
-            aH = np.zeros(2)
+            aH = np.zeros(self.hiddenunits)
             error = 0
 
             for j in range(len(I)):
+                dWIH = np.zeros((self.input + self.hiddenunits + 1, self.hiddenunits))
+                dWHO = np.zeros((self.hiddenunits + 1, self.output))
+
                 contex_layer = np.append(aH, np.append(I[j], 1))
                 Hnet = np.dot(contex_layer, self.WIH)
                 H = sigmoid(Hnet)  # Sigmoid Function
@@ -64,12 +64,12 @@ class SRN:
 
                 self.WIH = self.WIH + eta * dWIH
                 self.WHO = self.WHO + eta * dWHO
-                error += np.power((T[i] - O), 2)
+                error += np.power((T[j] - O), 2)
 
             RMSerr[i] = np.sqrt(np.sum(error)/p)
 
-            if (i+1)%10==0  and (i+1 < t) :
-                print(RMSerr[i])
+            if (i)%10==0:
+                print("%d / %d: %.6f" % (i, t, RMSerr[i]))
 
         print()
         print("Complete %d Iterations for SRN" % t)
