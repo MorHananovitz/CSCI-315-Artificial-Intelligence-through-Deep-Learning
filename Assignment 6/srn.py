@@ -47,9 +47,6 @@ class SRN:
             error = 0
 
             for j in range(len(I)):
-                dWIH = np.zeros((self.input + self.hiddenunits + 1, self.hiddenunits))
-                dWHO = np.zeros((self.hiddenunits + 1, self.output))
-
                 contex_layer = np.append(aH, np.append(I[j], 1))
                 Hnet = np.dot(contex_layer, self.WIH)
                 H = sigmoid(Hnet)  # Sigmoid Function
@@ -59,11 +56,11 @@ class SRN:
                 delO = np.multiply((T[j] - O), sigmoid(O, True))
                 err = np.dot(delO, self.WHO.T)[:-1]
                 delH = np.multiply(err, sigmoid(Hnet, True))  # Backprop
-                dWIH = dWIH + np.dot(contex_layer.reshape(-1, 1), delH.reshape(-1, 1).T)
-                dWHO = dWHO + np.dot(np.append(H, 1).reshape(-1, 1), delO.reshape(-1, 1).T)
+                dWIH = np.dot(contex_layer.reshape(-1, 1), delH.reshape(-1, 1).T)
+                dWHO = np.dot(np.append(H, 1).reshape(-1, 1), delO.reshape(-1, 1).T)
 
-                self.WIH = self.WIH + eta * dWIH
-                self.WHO = self.WHO + eta * dWHO
+                self.WIH += eta * dWIH
+                self.WHO += eta * dWHO
                 error += np.power((T[j] - O), 2)
 
             RMSerr[i] = np.sqrt(np.sum(error)/p)
