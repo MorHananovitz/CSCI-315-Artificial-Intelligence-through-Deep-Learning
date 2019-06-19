@@ -110,7 +110,7 @@ with lstm.run():
 
                 #onehot_pred = session.run(pred, feed_dict={x: keys})
 
-                onehot_pred_index = lstm.trainstep(keys)
+                onehot_pred_index = lstm.teststep(keys)
 
                 sentence = "%s %s" % (sentence,reverse_dictionary[onehot_pred_index])
                 symbols_in_keys = symbols_in_keys[1:]
