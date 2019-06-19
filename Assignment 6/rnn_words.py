@@ -42,7 +42,7 @@ vocab_size = len(dictionary)
 
 # Parameters
 learning_rate = 0.001
-training_iters = 100
+training_iters = 50000
 display_step = 1000
 n_input = 3
 
@@ -84,7 +84,8 @@ with lstm.run():
             loss_total = 0
             symbols_in = [training_data[i] for i in range(offset, offset + n_input)]
             symbols_out = training_data[offset + n_input]
-            symbols_out_pred = reverse_dictionary[int(tf.argmax(onehot_pred, 1).eval())]
+            symbols_out_pred = reverse_dictionary[lstm.teststep(symbols_in_keys)]
+
             print("%s - [%s] vs [%s]" % (symbols_in,symbols_out,symbols_out_pred))
         step += 1
         offset += (n_input+1)

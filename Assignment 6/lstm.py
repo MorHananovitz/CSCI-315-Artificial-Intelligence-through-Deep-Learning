@@ -18,11 +18,11 @@ class LSTM:
         biases = {'out': tf.Variable(tf.random_normal([n_output]))}
 
         # reshape to [1, n_input]
-        x1 = tf.reshape(self.x, [-1, n_input])
+        x = tf.reshape(self.x, [-1, n_input])
 
         # Generate a n_input-element sequence of inputs
         # (eg. [had] [a] [general] -> [20] [6] [33])
-        x1 = tf.split(x1, n_input, 1)
+        x = tf.split(x, n_input, 1)
 
         # 1-layer LSTM with n_hidden units but with lower accuracy.
         # Average Accuracy= 90.60% 50k iter
@@ -30,7 +30,7 @@ class LSTM:
         rnn_cell = rnn.BasicLSTMCell(n_hidden)
 
         # generate prediction
-        outputs, states = rnn.static_rnn(rnn_cell, x1, dtype=tf.float32)
+        outputs, states = rnn.static_rnn(rnn_cell, x, dtype=tf.float32)
 
         # there are n_input outputs but
         # we only want the last output
@@ -55,7 +55,7 @@ class LSTM:
 
     def teststep(self, inputs):
         onehot_pred = self.sess.run(self.pred, feed_dict={self.x: inputs})
-        return int(tf.argmax(onehot, 1).eval())
+        return int(tf.argmax(onehot_pred, 1).eval())
 
     def trainstep(self, inputs, targets):
         _, acc, loss = self.sess.run([self.optimizer, self.accuracy, self.cost], feed_dict = {self.x: inputs, self.y: targets})
