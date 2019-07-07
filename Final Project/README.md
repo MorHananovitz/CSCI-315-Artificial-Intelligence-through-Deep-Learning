@@ -9,15 +9,13 @@ As technology evolves, processes improves, but not everything is changing. We sh
 Fig. 1 Part in Question
 
 ## Structure 
-  - Inputs: Time series (i.e CycleCounts) of the average measured value
+  - Inputs: Time series (i.e CycleCounts) of the average measured value 
+  - Features: Parameters collected based on part's manufacture specs
+  - Output: Behavioural prediction in the form of a graph to demonstrate next steps of the part
 
  <img src=“trend.JPG” align=“center” width=700>
  Fig. 2 Trend Example
  
-  - Features: Parameters collected based on part's manufacture specs
-  - Output: Behavioural prediction in the form of a graph to demonstrate next steps of the part
-
-
 ## How Does the Data Looks Like?
 
 Our data is composed out of 10 parts (Same Make and Model - different Serial Numbers) that ran through the machine in a long period of time (i.e CycleCount).
