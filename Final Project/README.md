@@ -10,7 +10,7 @@ Fig. 1 Part in Question
 
   - Inputs: Time series (i.e CycleCounts) of the average measured value
 
- <img src=“trendexamp1.JPG” align=“center” width=700>
+ <img src=“trend.JPG” align=“center” width=700>
  Fig. 2 Trend Example
   - Features: Parameters collected based on part's manufacture specs
   - Output: Behavioural prediction in the form of a graph to demonstrate next steps of the part
