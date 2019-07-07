@@ -8,6 +8,7 @@ As technology evolves, processes improves, but not everything is changing. We sh
 <img src="part.JPG" align="center" width=700>
 Fig. 1 Part in Question
 
+
   - Inputs: Time series (i.e CycleCounts) of the average measured value
 
  <img src=“trend.JPG” align=“center” width=700>
