@@ -13,7 +13,7 @@ Fig. 1 Part in Question
   - Features: Parameters collected based on part's manufacture specs
   - Output: Behavioural prediction in the form of a graph to demonstrate next steps of the part
 
- <img src=“trend2.JPG” align=“center” width=700>
+ <img src=“trend.PNG” align=“center” width=700>
  Fig. 2 Trend Example
  
 ## How Does the Data Looks Like?
